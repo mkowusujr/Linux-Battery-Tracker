@@ -18,4 +18,7 @@ void* qfront();
 void* qrear();
 
 ///
+int is_empty();
+
+///
 int qlength();
