@@ -47,7 +47,6 @@ void enqueue(Queue q, void* item)
     if (q->curr_capacity == q->max_capacity)
     {
         dequeue(q);
-        // Update queue
     }
     q->list[q->curr_capacity] = item;    
     q->curr_capacity += 1;
@@ -91,6 +90,15 @@ void* qrear(Queue q)
 void* qposition(Queue q, int position)
 {
     return q->list[position];
+}
+
+//
+//
+// @param:
+// @return:
+void** get_queue(Queue q)
+{
+    return q->list;
 }
 
 
