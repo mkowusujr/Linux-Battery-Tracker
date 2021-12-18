@@ -59,7 +59,8 @@ void enqueue(Queue q, void* item)
 // @param:
 void dequeue(Queue q)
 {
-    
+    q->list[q->curr_capacity] = NULL;
+    q->curr_capacity -= 1;
 }
 
 
@@ -80,6 +81,16 @@ void* qfront(Queue q)
 void* qrear(Queue q)
 {
     return q->list[q->curr_capacity];
+}
+
+
+//
+//
+// @param:
+// @return:
+void* qposition(Queue q, int position)
+{
+    return q->list[position];
 }
 
 

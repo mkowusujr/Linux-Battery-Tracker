@@ -24,6 +24,9 @@ void* qfront(Queue q);
 void* qrear(Queue q);
 
 ///
+void* qposition(Queue q, int position);
+
+///
 int is_empty(Queue q);
 
 ///
