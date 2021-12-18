@@ -21,4 +21,7 @@ void* qrear();
 int is_empty();
 
 ///
+int is_full();
+
+///
 int qlength();
