@@ -6,22 +6,25 @@
 typedef struct queue_s * Queue;
 
 ///
-void enqueue();
+Queue* make_queue();
 
 ///
-void dequeue();
+void enqueue(Queue *q);
 
 ///
-void* qfront();
+void dequeue(Queue *q);
 
 ///
-void* qrear();
+void* qfront(Queue *q);
 
 ///
-int is_empty();
+void* qrear(Queue *q);
 
 ///
-int is_full();
+int is_empty(Queue *q);
 
 ///
-int qlength();
+int is_full(Queue *q);
+
+///
+int qlength(Queue *q);
