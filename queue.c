@@ -17,7 +17,8 @@ typedef struct queue_s{
 
 //
 //
-//
+// @param:
+// @return:
 Queue make_queue(int max_cap)
 {
     Queue q = malloc(sizeof(struct queue_s));
@@ -29,8 +30,8 @@ Queue make_queue(int max_cap)
 
 
 //
-//
-//
+// 
+// @param:
 void destory(Queue q)
 {
     free(q->list);
@@ -58,50 +59,61 @@ void enqueue(Queue q, void* item)
 // @param:
 void dequeue(Queue q)
 {
-
+    
 }
 
 
 //
 //
 // @param:
+// @return:
 void* qfront(Queue q)
 {
-    return 0;
+    return q->list[0];
 }
 
 
 //
 //
 // @param:
+// @return: 
 void* qrear(Queue q)
 {
-    return 0;
+    return q->list[q->curr_capacity];
 }
 
 
 //
 //
 // @param:
+// @return: 1 if empty, 0 if not empty
 int is_empty(Queue q)
 {
-    return 0;
+    if(q->curr_capacity != 0)
+        return 0;
+    else 
+        return 1;
 }
 
 
 // 
 //
 // @param:
+// @ return 1 if full, 0 is not full
 int is_full(Queue q)
 {
-    return 0;
+    if (q->curr_capacity != q->max_capacity)
+        return 0;
+    else
+        return 1;
 }
 
 
 //
 //
 // @param:
+// @return:
 int qlength(Queue q)
 {
-    return 0; 
+    return q->curr_capacity; 
 }
