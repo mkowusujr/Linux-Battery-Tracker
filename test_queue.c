@@ -19,7 +19,7 @@ int main()
     Queue q = make_queue(5);
     
     // Test enqueue and dequeue and qlength
-    printf("Test enqueue\nAdding five items\n");
+    printf("Test enqueue\nAdding five items...\n");
     enqueue(q, (void*) "Item 1");
     enqueue(q, (void*) "Item 2");
     enqueue(q, (void*) "Item 3");
@@ -46,14 +46,14 @@ int main()
 
     // Test empty and full
     printf("\nTest empty and full functions\nThe queue is currently ");
-    if (is_empty(q))
+    if (is_q_empty(q))
     {
         printf("empty");
     }
     else
         printf("not empty");
     printf(" and it is also ");
-    if (is_full(q))
+    if (is_q_full(q))
     {
         printf("full\n");
     }
@@ -61,7 +61,7 @@ int main()
         printf("not full\n");
 
     // front and rear
-    printf("\nTest qfront and qrear\nAdding five more items\n");
+    printf("\nTest qfront and qrear\nAdding five more items...\n");
     enqueue(q, (void*) "Item 6");
     enqueue(q, (void*) "Item 7");
     enqueue(q, (void*) "Item 8");
@@ -72,15 +72,20 @@ int main()
     
     // Testing auto queue when at max cap
     printf("\nTest auto queue when at max cap\n");
+    printf("Adding item...\n"); // Add item
     enqueue(q, (void*) "Item 11");
     printf("first in line is: %s\n", (char*)qfront(q));
     printf("last in line is: %s\n", (char*)qrear(q));
+    printf("Adding item...\n"); // Add item
     enqueue(q, (void*) "Item 12");
     printf("first in line is: %s\n", (char*)qfront(q));
     printf("last in line is: %s\n", (char*)qrear(q));
+    printf("Adding item...\n"); // Add item
     enqueue(q, (void*) "Item 13");
     printf("first in line is: %s\n", (char*)qfront(q));
     printf("last in line is: %s\n", (char*)qrear(q));
 
+    // free memory
+    destory_queue(q);
     return 0;
 }

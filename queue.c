@@ -32,7 +32,7 @@ Queue make_queue(int max_cap)
 //
 // 
 // @param:
-void destory(Queue q)
+void destory_queue(Queue q)
 {
     free(q->list);
     free(q);
@@ -111,7 +111,7 @@ void** get_queue(Queue q)
 //
 // @param:
 // @return: 1 if empty, 0 if not empty
-int is_empty(Queue q)
+int is_q_empty(Queue q)
 {
     if(q->curr_capacity != 0)
         return 0;
@@ -124,7 +124,7 @@ int is_empty(Queue q)
 //
 // @param:
 // @ return 1 if full, 0 is not full
-int is_full(Queue q)
+int is_q_full(Queue q)
 {
     if (q->curr_capacity != q->max_capacity)
         return 0;

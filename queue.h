@@ -9,7 +9,7 @@ typedef struct queue_s * Queue;
 Queue make_queue(int max_cap);
 
 ///
-void destory(Queue q);
+void destory_queue(Queue q);
 
 ///
 void enqueue(Queue q, void* item);
@@ -30,10 +30,10 @@ void* qposition(Queue q, int position);
 void** get_queue(Queue q);
 
 ///
-int is_empty(Queue q);
+int is_q_empty(Queue q);
 
 ///
-int is_full(Queue q);
+int is_q_full(Queue q);
 
 ///
 int qlength(Queue q);
