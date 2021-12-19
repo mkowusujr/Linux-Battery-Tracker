@@ -63,7 +63,7 @@ void dequeue(Queue q)
     {
         q->list[i-1] = q->list[i];
     }
-    q->list[q->curr_capacity]=NULL;
+    q->list[q->curr_capacity - 1]=NULL;
     q->curr_capacity -= 1;
 }
 
