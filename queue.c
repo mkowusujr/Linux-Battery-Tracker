@@ -58,7 +58,12 @@ void enqueue(Queue q, void* item)
 // @param:
 void dequeue(Queue q)
 {
-    q->list[q->curr_capacity] = NULL;
+    //q->list[q->curr_capacity] = NULL;
+    for (int i = 1; i < q->curr_capacity; i++)
+    {
+        q->list[i-1] = q->list[i];
+    }
+    q->list[q->curr_capacity]=NULL;
     q->curr_capacity -= 1;
 }
 

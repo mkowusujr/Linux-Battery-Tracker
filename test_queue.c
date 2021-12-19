@@ -19,18 +19,22 @@ void qprint(Queue q)
 int main()
 {
     Queue q = make_queue(5);
-    //printf("%d\n", qlength(q));
     enqueue(q, (void*) "Item 1");
-    //printf("%d\n", qlength(q));
-    //qprint(q);
     enqueue(q, (void*) "Item 2");
-    //printf("%d\n", qlength(q));
     enqueue(q, (void*) "Item 3");
-    //printf("%d\n", qlength(q));
     enqueue(q, (void*) "Item 4");
     enqueue(q, (void*) "Item 5");
-    //printf("%d\n", qlength(q));
     qprint(q);
-
+    dequeue(q); // item 1 leaves
+    qprint(q);
+    dequeue(q); // item 2 leaves
+    qprint(q);
+    dequeue(q); // item 3 leaves
+    qprint(q);
+    dequeue(q); // item 4 leaves
+    qprint(q);
+    dequeue(q); // item 5 leaves
+    qprint(q);
+    printf("%d\n", qlength(q));  
     return 0;
 }
