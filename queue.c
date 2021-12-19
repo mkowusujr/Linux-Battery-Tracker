@@ -84,7 +84,7 @@ void* qfront(Queue q)
 // @return: 
 void* qrear(Queue q)
 {
-    return q->list[q->curr_capacity];
+    return q->list[q->curr_capacity - 1];
 }
 
 
