@@ -61,8 +61,8 @@ int main(void)
         // Writing to files
         // if time is between 00:00 and 00:01 clear the file
         if ((clear_file == 0) &&
-                ((cur_time % UNIX_DAY <= MIDNIGHT) && 
-                 (cur_time % UNIX_DAY >= TWELVE_O_ONE)))
+                ((cur_time % UNIX_DAY >= MIDNIGHT) && 
+                 (cur_time % UNIX_DAY <= TWELVE_O_ONE)))
         {
             output = fopen(BAT_DATA, "w");
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
@@ -74,7 +74,7 @@ int main(void)
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
         }
         
-        if (cur_time % UNIX_DAY < TWELVE_O_ONE)
+        if (cur_time % UNIX_DAY > TWELVE_O_ONE)
             clear_file = 0;
         // Closing files, freeing memory
         fclose(cur_bat);
