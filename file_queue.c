@@ -7,12 +7,43 @@
 #define LEN 5
 
 
+// FILE operations
+//static char *get_filename(FILE *fileptr)
+//{
+//    return "TODO";
+//}
+
+
 //
 typedef struct queue_s{
     int curr_capacity;
     int max_capacity;
     void** list;
 }* Queue;
+
+
+//
+//
+// @param:
+static void update_bat_stat_log(Queue q)
+{
+    FILE *bat_log = fopen("bat_log.txt", "w");
+    for (int i = 0; i < qlength(q); i++)
+    {
+        if (i != (qlength(q) - 1))
+        {
+            fprintf(bat_log, (char*)(q->list[i]));
+            fprintf(bat_log, ",");    
+        }
+        else
+        {
+            fprintf(bat_log, (char*)(q->list[i]));
+            fprintf(bat_log, "\n");
+        }
+    }
+    //fprintf(bat_log,"\n");
+    fclose(bat_log);
+}
 
 
 //
@@ -50,6 +81,7 @@ void enqueue(Queue q, void* item)
     }
     q->list[q->curr_capacity] = item;    
     q->curr_capacity += 1;
+    update_bat_stat_log(q);
 }
 
 
@@ -58,7 +90,7 @@ void enqueue(Queue q, void* item)
 // @param:
 void dequeue(Queue q)
 {
-    //q->list[q->curr_capacity] = NULL;
+    remove((char*)qfront(q));
     for (int i = 1; i < q->curr_capacity; i++)
     {
         q->list[i-1] = q->list[i];
