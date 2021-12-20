@@ -26,7 +26,7 @@
 //
 // @param:
 // @reutrn:
-char *new_filename(time_t curr_time)
+static char *new_filename(time_t curr_time)
 {
     char *time_string = ctime(&curr_time);
     time_string[strlen(time_string) - 1] = 0; // removes '\n' 
@@ -36,6 +36,25 @@ char *new_filename(time_t curr_time)
             time_string[i] = '_';
     }
     return time_string;
+}
+
+
+//
+//
+// @param:
+// @param:
+static void copy_file_contents(FILE *source, FILE *target)
+{
+    char c;
+    c = fgetc(source);
+    while (c != EOF)
+    {
+        fputc(c, target);
+        c = fgetc(source);
+    }
+
+    fclose(source);
+    fclose(target);
 }
 
 
@@ -88,17 +107,12 @@ int main(void)
                 ((cur_time % UNIX_DAY >= MIDNIGHT) && 
                  (cur_time % UNIX_DAY <= TWELVE_O_ONE)))
         {
-            // Add current file to log queue
+            // Copy current data to new file and add it to the past days queue
             FILE *source = fopen(BAT_DATA,"r");
-            char *nameee= (char*)cur_time;
-
-            FILE *target = fopen(nameee,"w");
-            // copy over file contents
-            fprintf(target, "bruh\n");
-            fclose(target); 
-            // enqueue target file
-            enqueue(past_days, (void*)nameee);
-            fclose(source);
+            char *target_name = new_filename(cur_time);
+            FILE *target = fopen(target_name,"w");
+            copy_file_contents(source, target);
+            enqueue(past_days, target_name);
 
             // Wipe current file
             output = fopen(BAT_DATA, "w");
