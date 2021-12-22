@@ -119,7 +119,7 @@ int main(void)
                 perror("Can't create file");
             printf("name: %s\n", target_name);
             copy_file_contents(source, target);
-            //enqueue(past_days, &(*target_name));
+            enqueue(past_days, (void*)&(*target_name));
             //free(target_name);
             // Wipe current file
             output = fopen(BAT_DATA, "w");
