@@ -8,28 +8,26 @@ import numpy as np
 import datetime
 
 
-def main():
-    """
-
-    """
+def chart_data(file):
     times = []
     battery = []
 
     # Open file
-    with open("/var/lib/bat_data") as file:
-        for line in file:
+    with open(file, 'r') as data:
+
+        for line in data.readlines():
             # Break it apart
             line = line.rstrip()
-            data = line.split(",")
+            line = line.split(",")
 
             # store time data
-            val = int(data[0])
+            val = int(line[0])
             time = datetime.datetime.fromtimestamp(val)
             times.append(time)
 
             # store battery data
-            battery.append(float(data[1]))
-    file.close()
+            battery.append(float(line[1]))
+    data.close()
 
     # store data in coordinates
     x_vals = np.array(times)
@@ -39,6 +37,14 @@ def main():
     plt.plot(x_vals, y_vals)
     # plt.gca()
     plt.show()
+
+
+def main():
+    """
+
+    """
+    chart_data("/var/lib/bat_data")
+
 
 
 if __name__ == "__main__":
