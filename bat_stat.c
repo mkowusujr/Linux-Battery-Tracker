@@ -78,6 +78,7 @@ int main(void)
     
     // queue for handling past bat day data
     Queue past_days = make_queue(5);
+    char *target_name;
 
     // Have I cleared the current file?
     int clear_file = 0;
@@ -113,7 +114,7 @@ int main(void)
         {*/
             // Copy current data to new file and add it to the past days queue
             FILE *source = fopen(BAT_DATA,"r");
-            char *target_name = new_filename(cur_time);
+            target_name = new_filename(cur_time);
             FILE *target = fopen(target_name,"w");
             if (! target)
                 perror("Can't create file");
@@ -139,8 +140,8 @@ int main(void)
         fclose(cur_bat);
         fclose(max_bat);
         fclose(output);
-
         //sleep
         sleep(10);
     }
+    free(target_name);
 }
