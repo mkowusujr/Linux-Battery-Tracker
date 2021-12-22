@@ -10,7 +10,7 @@ import datetime
 
 def fetch_bat_log():
     # list_of_days = []
-    with open("bat_log.txt", 'r') as log:
+    with open("/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/bat_log.txt", 'r') as log:
         days = log.readline().strip()
         days = days.split(',')
         list_of_days = days

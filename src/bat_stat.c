@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#include "queue.h"
+#include "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Utilities/queue.h"
 
 // Location of current battery voltage file 
 #define ENERGY_NOW "/sys/class/power_supply/BAT0/energy_now"
@@ -31,7 +31,7 @@ static char *new_filename(time_t curr_time)
 {
     char *location = (char*)malloc(200);
     //strcpy(location, "data/");
-    strcpy(location, "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/data/");
+    strcpy(location, "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/");
     char *time_string = ctime(&curr_time);
     time_string[strlen(time_string) - 1] = 0; // removes '\n' 
     for (int i = 0; i < strlen(time_string); i++)
