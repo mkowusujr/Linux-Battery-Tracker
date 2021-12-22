@@ -30,7 +30,8 @@
 static char *new_filename(time_t curr_time)
 {
     char *location = (char*)malloc(200);
-    strcpy(location, "data/");
+    //strcpy(location, "data/");
+    strcpy(location, "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/data/");
     char *time_string = ctime(&curr_time);
     time_string[strlen(time_string) - 1] = 0; // removes '\n' 
     for (int i = 0; i < strlen(time_string); i++)
@@ -121,7 +122,7 @@ int main(void)
             printf("name: %s\n", target_name);
             copy_file_contents(source, target);
             enqueue(past_days, (void*)&(*target_name));
-            //free(target_name);
+            //fclose(target);
             // Wipe current file
             output = fopen(BAT_DATA, "w");
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
