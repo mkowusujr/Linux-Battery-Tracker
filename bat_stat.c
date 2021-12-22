@@ -116,9 +116,9 @@ int main(void)
             char *target_name = new_filename(cur_time);
             FILE *target = fopen(target_name,"w");
             if (! target)
-                perror("Create make file");
+                perror("Can't create file");
             printf("name: %s\n", target_name);
-            //copy_file_contents(source, target);
+            copy_file_contents(source, target);
             //enqueue(past_days, &(*target_name));
             //free(target_name);
             // Wipe current file
