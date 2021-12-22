@@ -8,6 +8,16 @@ import numpy as np
 import datetime
 
 
+def fetch_bat_log():
+    # list_of_days = []
+    with open("bat_log.txt", 'r') as log:
+        days = log.readline().strip()
+        days = days.split(',')
+        list_of_days = days
+    log.close()
+    return list_of_days
+
+
 def chart_data(file):
     times = []
     battery = []
@@ -44,7 +54,10 @@ def main():
 
     """
     chart_data("/var/lib/bat_data")
+    days = fetch_bat_log()
 
+    for day in days:
+        chart_data(day)
 
 
 if __name__ == "__main__":
