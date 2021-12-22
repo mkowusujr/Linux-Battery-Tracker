@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
+#include <string.h>
+#include <stdlib.h>
+#include "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Utilities/queue.h"
 
 // Location of current battery voltage file 
 #define ENERGY_NOW "/sys/class/power_supply/BAT0/energy_now"
@@ -20,7 +23,47 @@
 #define TWELVE_O_ONE 18060
 
 
-// This function
+// Function to create name of past day file
+//
+// @param:
+// @reutrn:
+static char *new_filename(time_t curr_time)
+{
+    char *location = (char*)malloc(200);
+    //strcpy(location, "data/");
+    strcpy(location, "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/");
+    char *time_string = ctime(&curr_time);
+    time_string[strlen(time_string) - 1] = 0; // removes '\n' 
+    for (int i = 0; i < strlen(time_string); i++)
+    {
+        if (time_string[i] == ' ')
+            time_string[i] = '_';
+    }
+    strcat(location, time_string);
+    return location;
+}
+
+
+//
+//
+// @param:
+// @param:
+static void copy_file_contents(FILE *source, FILE *target)
+{
+    char c;
+    c = fgetc(source);
+    while (c != EOF)
+    {
+        fputc(c, target);
+        c = fgetc(source);
+    }
+
+    fclose(source);
+    fclose(target);
+}
+
+
+// This function has the main loop
 //
 int main(void)
 {
@@ -34,8 +77,14 @@ int main(void)
     // Creating file pointers
     FILE *cur_bat, *max_bat, *output;
     
-    // Main loop
+    // queue for handling past bat day data
+    Queue past_days = make_queue(5);
+    char *target_name;
+
+    // Have I cleared the current file?
     int clear_file = 0;
+
+    // main loop of daemon process
     while(1)
     {
         // Read current battery
@@ -60,28 +109,40 @@ int main(void)
         
         // Writing to files
         // if time is between 00:00 and 00:01 clear the file
-        if ((clear_file == 0) &&
+        /*if ((clear_file == 0) &&
                 ((cur_time % UNIX_DAY >= MIDNIGHT) && 
                  (cur_time % UNIX_DAY <= TWELVE_O_ONE)))
-        {
+        {*/
+            // Copy current data to new file and add it to the past days queue
+            FILE *source = fopen(BAT_DATA,"r");
+            target_name = new_filename(cur_time);
+            FILE *target = fopen(target_name,"w");
+            if (! target)
+                perror("Can't create file");
+            printf("name: %s\n", target_name);
+            copy_file_contents(source, target);
+            enqueue(past_days, (void*)&(*target_name));
+            //fclose(target);
+            // Wipe current file
             output = fopen(BAT_DATA, "w");
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
             clear_file = 1;
-        }
+        /*}
         else
         {
             output = fopen(BAT_DATA, "a");
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
-        }
+        }*/
         
         if (cur_time % UNIX_DAY > TWELVE_O_ONE)
             clear_file = 0;
+        
         // Closing files, freeing memory
         fclose(cur_bat);
         fclose(max_bat);
         fclose(output);
-
         //sleep
         sleep(10);
     }
+    free(target_name);
 }

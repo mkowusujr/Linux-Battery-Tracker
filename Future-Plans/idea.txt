@@ -1,0 +1,23 @@
+just graph one day
+from 00:00:00 to 23:59:59
+
+handle sigterm
+	https://www.computerhope.com/unix/ushutdow.htm
+
+after a day clear the file
+	https://www.unixtimestamp.com/
+	1639717260 % 86400
+
+	define 86400 as UNIX_DAY
+
+	start of day
+	00:00 and 00:01
+	18000 and 18060
+
+	if time is inbetween 00:00 and 00:01 && file_cleared? false,
+	clear the file
+	cleared file on - "w"
+	if time after 00:01 cleared time on
+
+store last five days
+	using a queue that just keeps on running
