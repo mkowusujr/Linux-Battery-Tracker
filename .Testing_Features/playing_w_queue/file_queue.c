@@ -4,15 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "queue.h"
-#define LEN 5
-
-
-// FILE operations
-//static char *get_filename(FILE *fileptr)
-//{
-//    return "TODO";
-//}
-
 
 //
 typedef struct queue_s{
