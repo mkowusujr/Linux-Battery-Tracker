@@ -1,19 +1,24 @@
 #!/usr/bin/env python
 # Load Gtk
 import gi
+
 # matplotlib
 from matplotlib.backends.backend_gtk3agg import (
     FigureCanvasGTK3Agg as FigureCanvas)
 from matplotlib.figure import Figure
-import numpy as np
-import datetime
 import matplotlib.dates as dates
-import matplotlib.ticker as ticker
+from matplotlib.ticker import PercentFormatter
+import numpy as np
+
+# datetime
+import datetime
+from datetime import timedelta
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 
-class LBT_gui:
+class LBTGui:
     def __init__(self):
         self.builder = Gtk.Builder()
         self.builder.add_from_file("lbt_gtk_layout.glade")
@@ -48,7 +53,6 @@ class LBT_gui:
                 # store time data
                 val = int(line[0])
                 time = datetime.datetime.fromtimestamp(val)
-                # time = time.time().strftime('%H:%M')
                 times.append(time)
 
                 # store battery data
@@ -61,24 +65,26 @@ class LBT_gui:
 
         # plot the coordinates
         ax.plot(x_vals, y_vals)
-        # ax.set_title(file)
         ax.set_xlabel("Time")
-        ##ax.xaxis.set_major_locator(ticker.MultipleLocator(240))
-        #ax.locator_params(axis='x', nbins=4)
-        #formatter = dates.DateFormatter('%H:%M')
 
+        year = int(times[0].date().strftime("%Y"))
+        month = int(times[0].date().strftime("%m"))
+        day = int(times[0].date().strftime("%d"))
+        next_day = times[0] + timedelta(days=1)
+        y2 = int(next_day.date().strftime("%Y"))
+        m2 = int(next_day.date().strftime("%m"))
+        d2 = int(next_day.date().strftime("%d"))
 
-        #ax.xaxis.set_major_formatter(formatter)
-        ax.xaxis.set_major_formatter(dates.DateFormatter('%H:%M'))
-        ##ax.set_xlim(0, 1440)
+        ax.xaxis.set_major_locator(dates.HourLocator(interval=4))
+        ax.set_xlim([datetime.date(year, month, day), datetime.date(y2, m2, d2)])
 
+        ax.xaxis.set_major_formatter(dates.DateFormatter('%I:%M %p'))
 
-        #ax.tick_params('x', length=5, width=2, which="major")
-        #ax.set_xlim('00:00:00', '23:59:59')
-        #ax.set_xticks([00:00:00, '04:00:00', '08:00:00', '12:00:00', '16:00:00', '20:00:00'])
         ax.set_ylabel("Battery Percentage")
         ax.set_ylim(0, 105)
         ax.set_yticks([0, 20, 40, 60, 80, 100])
+        ax.yaxis.set_major_formatter(PercentFormatter())
+
         ax.grid(True)
         return fig
 
@@ -93,7 +99,6 @@ class LBT_gui:
         canvas_window.show_all()
 
     def on_td_clicked(self, button):
-        days = self.fetch_bat_log()
         self.plot_data("/var/lib/bat_data")
 
     def on_yd_clicked(self, button):
@@ -126,5 +131,5 @@ class LBT_gui:
 
 
 if __name__ == '__main__':
-    LBT_gui()
+    LBTGui()
     Gtk.main()
