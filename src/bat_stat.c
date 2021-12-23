@@ -78,7 +78,7 @@ int main(void)
     FILE *cur_bat, *max_bat, *output;
     
     // queue for handling past bat day data
-    Queue past_days = make_queue(5);
+    Queue past_days = make_queue(7);
     char *target_name;
 
     // Have I cleared the current file?
