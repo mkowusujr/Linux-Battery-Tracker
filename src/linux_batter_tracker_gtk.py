@@ -81,17 +81,17 @@ class LBT_gui:
 
     def on_yd_clicked(self, button):
         days = self.fetch_bat_log()
-        self.plot_data(days[0])
+        self.plot_data(days[6])
 
 
     def on_2d_clicked(self, button):
         days = self.fetch_bat_log()
-        self.plot_data(days[1])
+        self.plot_data(days[5])
 
 
     def on_3d_clicked(self, button):
         days = self.fetch_bat_log()
-        self.plot_data(days[2])
+        self.plot_data(days[4])
 
 
     def on_4d_clicked(self, button):
@@ -101,16 +101,16 @@ class LBT_gui:
 
     def on_5d_clicked(self, button):
         days = self.fetch_bat_log()
-        self.plot_data(days[4])
+        self.plot_data(days[2])
 
 
     def on_6d_clicked(self, button):
         days = self.fetch_bat_log()
-        self.plot_data(days[5])
+        self.plot_data(days[1])
 
     def on_wk_clicked(self, button):
         days = self.fetch_bat_log()
-        self.plot_data(days[6])
+        self.plot_data(days[0])
 
 if __name__ == '__main__':
     LBT_gui()

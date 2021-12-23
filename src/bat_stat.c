@@ -111,8 +111,9 @@ int main(void)
         // if time is between 00:00 and 00:01 clear the file
         /*if ((clear_file == 0) &&
                 ((cur_time % UNIX_DAY >= MIDNIGHT) && 
-                 (cur_time % UNIX_DAY <= TWELVE_O_ONE)))
-        {*/
+                 (cur_time % UNIX_DAY <= TWELVE_O_ONE)))*/
+        if((clear_file == 0) && (cur_time % 300 >= 0) && (cur_time % 300 <= 60)) // testing, every five minutes
+        {
             // Copy current data to new file and add it to the past days queue
             FILE *source = fopen(BAT_DATA,"r");
             target_name = new_filename(cur_time);
@@ -127,16 +128,18 @@ int main(void)
             output = fopen(BAT_DATA, "w");
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
             clear_file = 1;
-        /*}
+        }
         else
         {
             output = fopen(BAT_DATA, "a");
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
-        }*/
-        
+        }
+        /*
         if (cur_time % UNIX_DAY > TWELVE_O_ONE)
             clear_file = 0;
-        
+        */
+        if (cur_time % 300 > 60)
+            clear_file = 0;
         // Closing files, freeing memory
         fclose(cur_bat);
         fclose(max_bat);

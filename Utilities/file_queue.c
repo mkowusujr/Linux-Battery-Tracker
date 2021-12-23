@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "queue.h"
-#define LEN 5
 
 
 //
@@ -48,7 +47,7 @@ Queue make_queue(int max_cap)
     Queue q = malloc(sizeof(struct queue_s));
     q->curr_capacity = 0;
     q->max_capacity = max_cap;
-    q->list = malloc(sizeof(void *) * LEN);
+    q->list = malloc(sizeof(void *) * max_cap);
     return q;
 }
 
