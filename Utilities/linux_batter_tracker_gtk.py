@@ -1,9 +1,13 @@
 # Load Gtk
 import gi
-from matplotlib.backends.backend_gtk3agg import FigureCanvasGTK3Agg
-import matplotlib.pyplot as plt
+# matplotlib
+from matplotlib.backends.backend_gtk3agg import (
+    FigureCanvasGTK3Agg as FigureCanvas)
+from matplotlib.figure import Figure
 import numpy as np
+# TODO set up time
 import datetime
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
@@ -15,15 +19,21 @@ class LBT_gui:
 
         self.window = self.builder.get_object("main_win")
         self.window.show_all()
+        self.plot_data()
+
 
     def plot_data(self):
-        canvas_window = self.builder.get_object("display_box")
+        canvas_window = self.builder.get_object("main_win_display")
         # graph
-        fig = plt.figure()
+        fig = Figure(figsize=(5, 4), dpi=100)
+        ax = fig.add_subplot()
+        t = np.arange(0.0, 3.0, 0.01)
+        s = np.sin(2 * np.pi * t)
+        ax.plot(t, s)
 
         #
-        canvas = FigureCanvasGTK3Agg(fig)
-        canvas.set_size_request(600, 400)
+        canvas = FigureCanvas(fig)
+        canvas.set_size_request(1005, 400)
         canvas_window.add(canvas)
         canvas_window.show_all()
 

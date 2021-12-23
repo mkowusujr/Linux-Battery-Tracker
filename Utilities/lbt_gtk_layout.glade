@@ -2,6 +2,12 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkWindow">
+    <property name="can-focus">False</property>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
   <object class="GtkWindow" id="main_win">
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Linux Battery Tracker</property>
@@ -33,7 +39,17 @@
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkFixed" id="main_win_display">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
         </child>
         <child>
           <object class="GtkBox" id="days_button">
