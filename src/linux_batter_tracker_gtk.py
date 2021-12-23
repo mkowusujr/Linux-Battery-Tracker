@@ -26,6 +26,9 @@ class LBTGui:
 
         self.window = self.builder.get_object("main_win")
         self.window.show_all()
+
+        date_str = self.get_date("/var/lib/bat_data")
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data("/var/lib/bat_data")
 
     def fetch_bat_log(self):
@@ -37,10 +40,7 @@ class LBTGui:
         log.close()
         return list_of_days
 
-    def make_fig(self, file):
-        fig = Figure(figsize=(5, 4), dpi=100)
-        ax = fig.add_subplot()
-
+    def open_file(self, file):
         times = []
         battery = []
         # Open file
@@ -57,7 +57,14 @@ class LBTGui:
 
                 # store battery data
                 battery.append(float(line[1]))
+        return times, battery
         data.close()
+
+    def make_fig(self, file):
+        fig = Figure(figsize=(5, 4), dpi=100)
+        ax = fig.add_subplot()
+
+        times, battery = self.open_file(file)
 
         # store data in coordinates
         x_vals = np.array(times)
@@ -88,6 +95,12 @@ class LBTGui:
         ax.grid(True)
         return fig
 
+    def get_date(self, file):
+        times = self.open_file(file)
+        date_time = times[0][0]
+        date_str = date_time.strftime('%A, %B %-d')
+        return date_str
+
     def plot_data(self, file):
         canvas_window = self.builder.get_object("main_win_display")
         # graph data
@@ -99,34 +112,50 @@ class LBTGui:
         canvas_window.show_all()
 
     def on_td_clicked(self, button):
+        date_str = self.get_date("/var/lib/bat_data")
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data("/var/lib/bat_data")
 
     def on_yd_clicked(self, button):
         days = self.fetch_bat_log()
+        date_str = self.get_date(days[6])
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data(days[6])
 
     def on_2d_clicked(self, button):
         days = self.fetch_bat_log()
+        date_str = self.get_date(days[5])
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data(days[5])
 
     def on_3d_clicked(self, button):
         days = self.fetch_bat_log()
+        date_str = self.get_date(days[4])
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data(days[4])
 
     def on_4d_clicked(self, button):
         days = self.fetch_bat_log()
+        date_str = self.get_date(days[3])
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data(days[3])
 
     def on_5d_clicked(self, button):
         days = self.fetch_bat_log()
+        date_str = self.get_date(days[2])
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data(days[2])
 
     def on_6d_clicked(self, button):
         days = self.fetch_bat_log()
+        date_str = self.get_date(days[1])
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data(days[1])
 
     def on_wk_clicked(self, button):
         days = self.fetch_bat_log()
+        date_str = self.get_date(days[0])
+        self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data(days[0])
 
 
