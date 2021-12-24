@@ -8,6 +8,7 @@ from matplotlib.backends.backend_gtk3agg import (
 from matplotlib.figure import Figure
 import matplotlib.dates as dates
 from matplotlib.ticker import PercentFormatter
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 import numpy as np
 
 # datetime
@@ -88,10 +89,11 @@ class LBTGui:
         ax.xaxis.set_major_formatter(dates.DateFormatter('%I:%M %p'))
 
         ax.set_ylabel("Battery Percentage")
-        ax.set_ylim(0, 105)
+        ax.set_ylim(0, 102.5)
         ax.set_yticks([0, 20, 40, 60, 80, 100])
         ax.yaxis.set_major_formatter(PercentFormatter())
-
+        ax.yaxis.set_minor_locator(AutoMinorLocator())
+        ax.tick_params(which='minor', length=2, color='r')
         ax.grid(True)
         return fig
 
