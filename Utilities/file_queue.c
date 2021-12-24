@@ -3,14 +3,16 @@
 // author: mathew owusu jr
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "queue.h"
-
+#define LOG_FILE "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/bat_log.txt"
 
 //
 typedef struct queue_s{
     int curr_capacity;
     int max_capacity;
     void** list;
+    void *buffer;
 }* Queue;
 
 
@@ -19,7 +21,7 @@ typedef struct queue_s{
 // @param:
 static void update_bat_stat_log(Queue q)
 {
-    FILE *bat_log = fopen("/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/bat_log.txt", "w");
+    FILE *bat_log = fopen(LOG_FILE, "w");
     for (int i = 0; i < qlength(q); i++)
     {
         if (i != (qlength(q) - 1))
@@ -33,8 +35,39 @@ static void update_bat_stat_log(Queue q)
             fprintf(bat_log, "\n");
         }
     }
-    //fprintf(bat_log,"\n");
     fclose(bat_log);
+}
+
+
+static void initial_enqueue(Queue q, void*item)
+{
+    q->list[q->curr_capacity] = item;    
+    q->curr_capacity += 1;
+}
+
+
+static void *refresh_queue(Queue q, FILE *log)
+{
+    // read file
+    //fseek(log, 0L, SEEK_END);
+    //long numbytes = ftell(log);
+    //fseek(log, 0L, SEEK_SET);
+
+    //char *buffer = (char*)malloc(sizeof(char) * 700);
+    char *buffer = (char*)calloc(700, sizeof(char));
+    //buffer = NULL;
+    fread(buffer, sizeof(char), 700, log);
+    printf("%s\n", buffer);
+    char *token = strtok(buffer, ",");
+    while (token != NULL)
+    {
+        printf("%s\n", token);
+        initial_enqueue(q, (void*)token);
+        token = strtok(NULL, ",");
+    }
+//    free(buffer);
+    fclose(log);
+    return (void *)buffer;
 }
 
 
@@ -48,6 +81,11 @@ Queue make_queue(int max_cap)
     q->curr_capacity = 0;
     q->max_capacity = max_cap;
     q->list = malloc(sizeof(void *) * max_cap);
+    FILE *log = fopen(LOG_FILE, "r");
+    if (log != NULL)
+    {
+        q->buffer = refresh_queue(q, log);
+    }
     return q;
 }
 
@@ -58,6 +96,7 @@ Queue make_queue(int max_cap)
 void destory_queue(Queue q)
 {
     free(q->list);
+    free(q->buffer);
     free(q);
 }
 

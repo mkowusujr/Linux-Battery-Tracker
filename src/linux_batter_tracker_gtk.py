@@ -29,6 +29,10 @@ def fetch_bat_log():
     return list_of_days
 
 
+def queue_len():
+    return len(fetch_bat_log())
+
+
 def open_file(file):
     times = []
     battery = []
@@ -51,8 +55,10 @@ def open_file(file):
 
 
 def get_date(index):
+    if index < 0:
+        return "No Data"
     try:
-        if index == -1:
+        if index == 7:
             file = "/var/lib/bat_data"
         else:
             days = fetch_bat_log()
@@ -71,9 +77,11 @@ def make_fig(index):
     ax = fig.add_subplot()
 
     try:
-        if index == -1:
+        if index == 7:
             file = "/var/lib/bat_data"
         else:
+            if index < 0:
+                raise IndexError
             days = fetch_bat_log()
             file = days[index]
 
@@ -121,9 +129,9 @@ class LBTGui:
         self.window = self.builder.get_object("main_win")
         self.window.show_all()
 
-        date_str = get_date(-1)
+        date_str = get_date(7)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(-1)
+        self.plot_data(7)
 
     def plot_data(self, file):
         canvas_window = self.builder.get_object("main_win_display")
@@ -136,44 +144,44 @@ class LBTGui:
         canvas_window.show_all()
 
     def on_td_clicked(self, button):
-        date_str = get_date(-1)
+        date_str = get_date(7)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(-1)
+        self.plot_data(7)
 
     def on_yd_clicked(self, button):
-        date_str = get_date(6)
+        date_str = get_date(-1 + queue_len())
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(6)
+        self.plot_data(-1 + queue_len())
 
     def on_2d_clicked(self, button):
-        date_str = get_date(5)
+        date_str = get_date(-2 + queue_len())
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(5)
+        self.plot_data(-2 + queue_len())
 
     def on_3d_clicked(self, button):
-        date_str = get_date(4)
+        date_str = get_date(-3 + queue_len())
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(4)
+        self.plot_data(-3 + queue_len())
 
     def on_4d_clicked(self, button):
-        date_str = get_date(3)
+        date_str = get_date(-4 + queue_len())
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(3)
+        self.plot_data(-4 + queue_len())
 
     def on_5d_clicked(self, button):
-        date_str = get_date(2)
+        date_str = get_date(-5 + queue_len())
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(2)
+        self.plot_data(-5 + queue_len())
 
     def on_6d_clicked(self, button):
-        date_str = get_date(1)
+        date_str = get_date(-6 + queue_len())
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(1)
+        self.plot_data(-6 + queue_len())
 
     def on_wk_clicked(self, button):
-        date_str = get_date(0)
+        date_str = get_date(-7 + queue_len())
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(0)
+        self.plot_data(-7 + queue_len())
 
 
 if __name__ == '__main__':
