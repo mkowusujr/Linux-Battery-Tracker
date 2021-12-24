@@ -1,6 +1,6 @@
 # Linux Battery Tracker
 A Gtk app and Daemon that work together to track and display a unix laptop's battery life throughout the course of a week
-![LBT in Action]("example.png")
+![LBT in Action](example.png)
 
 ## C Battery Daemon
 In unix everything is a file, even the current battery voltage of you laptop! This program 
