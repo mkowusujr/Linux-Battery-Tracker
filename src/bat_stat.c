@@ -112,6 +112,7 @@ int main(void)
         if ((clear_file == 0) &&
                 ((cur_time % UNIX_DAY >= MIDNIGHT) && 
                  (cur_time % UNIX_DAY <= TWELVE_O_ONE)))
+        {
             // Copy current data to new file and add it to the past days queue
             FILE *source = fopen(BAT_DATA,"r");
             target_name = new_filename(cur_time);
