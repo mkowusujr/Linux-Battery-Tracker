@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "queue.h"
-#define LOG_FILE "bat_log.txt"
+#define LOG_FILE "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/bat_log.txt"
 
 //
 typedef struct queue_s{
