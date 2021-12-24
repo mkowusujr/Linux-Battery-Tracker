@@ -8,7 +8,7 @@ from matplotlib.backends.backend_gtk3agg import (
 from matplotlib.figure import Figure
 import matplotlib.dates as dates
 from matplotlib.ticker import PercentFormatter
-from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+from matplotlib.ticker import AutoMinorLocator
 import numpy as np
 
 # datetime
@@ -17,6 +17,99 @@ from datetime import timedelta
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
+
+
+def fetch_bat_log():
+    # list_of_days = []
+    with open("/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/bat_log.txt", 'r') as log:
+        days = log.readline().strip()
+        days = days.split(',')
+        list_of_days = days
+    log.close()
+    return list_of_days
+
+
+def open_file(file):
+    times = []
+    battery = []
+    # Open file
+    with open(file, 'r') as data:
+        for line in data.readlines():
+            # Break it apart
+            line = line.rstrip()
+            line = line.split(",")
+
+            # store time data
+            val = int(line[0])
+            time = datetime.datetime.fromtimestamp(val)
+            times.append(time)
+
+            # store battery data
+            battery.append(float(line[1]))
+    data.close()
+    return times, battery
+
+
+def get_date(index):
+    try:
+        if index == -1:
+            file = "/var/lib/bat_data"
+        else:
+            days = fetch_bat_log()
+            file = days[index]
+
+        times = open_file(file)
+        date_time = times[0][0]
+        date_str = date_time.strftime('%A, %B %-d')
+        return date_str
+    except IndexError:
+        return "No Data"
+
+
+def make_fig(index):
+    fig = Figure(figsize=(5, 4), dpi=100)
+    ax = fig.add_subplot()
+
+    try:
+        if index == -1:
+            file = "/var/lib/bat_data"
+        else:
+            days = fetch_bat_log()
+            file = days[index]
+
+        times, battery = open_file(file)
+
+        # store data in coordinates
+        x_vals = np.array(times)
+        y_vals = np.array(battery)
+
+        # plot the coordinates
+        ax.plot(x_vals, y_vals)
+
+        year = int(times[0].date().strftime("%Y"))
+        month = int(times[0].date().strftime("%m"))
+        day = int(times[0].date().strftime("%d"))
+        next_day = times[0] + timedelta(days=1)
+        y2 = int(next_day.date().strftime("%Y"))
+        m2 = int(next_day.date().strftime("%m"))
+        d2 = int(next_day.date().strftime("%d"))
+        ax.set_xlim([datetime.date(year, month, day), datetime.date(y2, m2, d2)])
+    except IndexError:
+        ax.set_xlim([datetime.date(1970, 1, 1), datetime.date(1970, 1, 2)])
+        pass
+
+    ax.set_xlabel("Time")
+    ax.xaxis.set_major_locator(dates.HourLocator(interval=4))
+    ax.xaxis.set_major_formatter(dates.DateFormatter('%I:%M %p'))
+
+    ax.set_ylabel("Battery Percentage")
+    ax.set_ylim(0, 102.5)
+    ax.set_yticks([0, 20, 40, 60, 80, 100])
+    ax.yaxis.set_major_formatter(PercentFormatter())
+    ax.yaxis.set_minor_locator(AutoMinorLocator())
+    ax.tick_params(which='minor', length=2, color='r')
+    ax.grid(True)
+    return fig
 
 
 class LBTGui:
@@ -28,85 +121,14 @@ class LBTGui:
         self.window = self.builder.get_object("main_win")
         self.window.show_all()
 
-        date_str = self.get_date("/var/lib/bat_data")
+        date_str = get_date(-1)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data("/var/lib/bat_data")
-
-    def fetch_bat_log(self):
-        # list_of_days = []
-        with open("/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/bat_log.txt", 'r') as log:
-            days = log.readline().strip()
-            days = days.split(',')
-            list_of_days = days
-        log.close()
-        return list_of_days
-
-    def open_file(self, file):
-        times = []
-        battery = []
-        # Open file
-        with open(file, 'r') as data:
-            for line in data.readlines():
-                # Break it apart
-                line = line.rstrip()
-                line = line.split(",")
-
-                # store time data
-                val = int(line[0])
-                time = datetime.datetime.fromtimestamp(val)
-                times.append(time)
-
-                # store battery data
-                battery.append(float(line[1]))
-        return times, battery
-        data.close()
-
-    def make_fig(self, file):
-        fig = Figure(figsize=(5, 4), dpi=100)
-        ax = fig.add_subplot()
-
-        times, battery = self.open_file(file)
-
-        # store data in coordinates
-        x_vals = np.array(times)
-        y_vals = np.array(battery)
-
-        # plot the coordinates
-        ax.plot(x_vals, y_vals)
-        ax.set_xlabel("Time")
-
-        year = int(times[0].date().strftime("%Y"))
-        month = int(times[0].date().strftime("%m"))
-        day = int(times[0].date().strftime("%d"))
-        next_day = times[0] + timedelta(days=1)
-        y2 = int(next_day.date().strftime("%Y"))
-        m2 = int(next_day.date().strftime("%m"))
-        d2 = int(next_day.date().strftime("%d"))
-
-        ax.xaxis.set_major_locator(dates.HourLocator(interval=4))
-        ax.set_xlim([datetime.date(year, month, day), datetime.date(y2, m2, d2)])
-
-        ax.xaxis.set_major_formatter(dates.DateFormatter('%I:%M %p'))
-
-        ax.set_ylabel("Battery Percentage")
-        ax.set_ylim(0, 102.5)
-        ax.set_yticks([0, 20, 40, 60, 80, 100])
-        ax.yaxis.set_major_formatter(PercentFormatter())
-        ax.yaxis.set_minor_locator(AutoMinorLocator())
-        ax.tick_params(which='minor', length=2, color='r')
-        ax.grid(True)
-        return fig
-
-    def get_date(self, file):
-        times = self.open_file(file)
-        date_time = times[0][0]
-        date_str = date_time.strftime('%A, %B %-d')
-        return date_str
+        self.plot_data(-1)
 
     def plot_data(self, file):
         canvas_window = self.builder.get_object("main_win_display")
         # graph data
-        fig = self.make_fig(file)
+        fig = make_fig(file)
         # add to canvas and window
         canvas = FigureCanvas(fig)
         canvas.set_size_request(900, 500)
@@ -114,51 +136,44 @@ class LBTGui:
         canvas_window.show_all()
 
     def on_td_clicked(self, button):
-        date_str = self.get_date("/var/lib/bat_data")
+        date_str = get_date(-1)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data("/var/lib/bat_data")
+        self.plot_data(-1)
 
     def on_yd_clicked(self, button):
-        days = self.fetch_bat_log()
-        date_str = self.get_date(days[6])
+        date_str = get_date(6)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(days[6])
+        self.plot_data(6)
 
     def on_2d_clicked(self, button):
-        days = self.fetch_bat_log()
-        date_str = self.get_date(days[5])
+        date_str = get_date(5)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(days[5])
+        self.plot_data(5)
 
     def on_3d_clicked(self, button):
-        days = self.fetch_bat_log()
-        date_str = self.get_date(days[4])
+        date_str = get_date(4)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(days[4])
+        self.plot_data(4)
 
     def on_4d_clicked(self, button):
-        days = self.fetch_bat_log()
-        date_str = self.get_date(days[3])
+        date_str = get_date(3)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(days[3])
+        self.plot_data(3)
 
     def on_5d_clicked(self, button):
-        days = self.fetch_bat_log()
-        date_str = self.get_date(days[2])
+        date_str = get_date(2)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(days[2])
+        self.plot_data(2)
 
     def on_6d_clicked(self, button):
-        days = self.fetch_bat_log()
-        date_str = self.get_date(days[1])
+        date_str = get_date(1)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(days[1])
+        self.plot_data(1)
 
     def on_wk_clicked(self, button):
-        days = self.fetch_bat_log()
-        date_str = self.get_date(days[0])
+        date_str = get_date(9)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(days[0])
+        self.plot_data(9)
 
 
 if __name__ == '__main__':
