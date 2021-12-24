@@ -1,0 +1,9 @@
+[Unit]
+Description=My Battery Stat Tracker Service
+
+[Service]
+Type=simple
+ExecStart=/home/mathew/Documents/programming/c/battery_daemon/a.out
+
+[Install]
+WantedBy=multi-user.target

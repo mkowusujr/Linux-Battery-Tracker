@@ -78,7 +78,7 @@ int main(void)
     FILE *cur_bat, *max_bat, *output;
     
     // queue for handling past bat day data
-    Queue past_days = make_queue(5);
+    Queue past_days = make_queue(7);
     char *target_name;
 
     // Have I cleared the current file?
@@ -109,10 +109,9 @@ int main(void)
         
         // Writing to files
         // if time is between 00:00 and 00:01 clear the file
-        /*if ((clear_file == 0) &&
+        if ((clear_file == 0) &&
                 ((cur_time % UNIX_DAY >= MIDNIGHT) && 
                  (cur_time % UNIX_DAY <= TWELVE_O_ONE)))
-        {*/
             // Copy current data to new file and add it to the past days queue
             FILE *source = fopen(BAT_DATA,"r");
             target_name = new_filename(cur_time);
@@ -122,21 +121,21 @@ int main(void)
             printf("name: %s\n", target_name);
             copy_file_contents(source, target);
             enqueue(past_days, (void*)&(*target_name));
-            //fclose(target);
+
             // Wipe current file
             output = fopen(BAT_DATA, "w");
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
             clear_file = 1;
-        /*}
+        }
         else
         {
             output = fopen(BAT_DATA, "a");
             fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
-        }*/
-        
+        }
+
         if (cur_time % UNIX_DAY > TWELVE_O_ONE)
             clear_file = 0;
-        
+
         // Closing files, freeing memory
         fclose(cur_bat);
         fclose(max_bat);
