@@ -171,9 +171,9 @@ class LBTGui:
         self.plot_data(1)
 
     def on_wk_clicked(self, button):
-        date_str = get_date(9)
+        date_str = get_date(0)
         self.builder.get_object("chart_name").set_text(date_str)
-        self.plot_data(9)
+        self.plot_data(0)
 
 
 if __name__ == '__main__':
