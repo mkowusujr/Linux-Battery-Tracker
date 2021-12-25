@@ -27,13 +27,13 @@ static void update_bat_stat_log(Queue q)
     {
         if (i != (qlength(q) - 1))
         {
-            fprintf(bat_log, (char*)(q->list[i]));
-            fprintf(bat_log, ",");    
+            fprintf(bat_log, "%s,", (char*)(q->list[i]));
+            //fprintf(bat_log, ",");    
         }
         else
         {
-            fprintf(bat_log, (char*)(q->list[i]));
-            fprintf(bat_log, "\n");
+            fprintf(bat_log, "%s\n", (char*)(q->list[i]));
+            //fprintf(bat_log, "\n");
         }
     }
     fclose(bat_log);
@@ -49,12 +49,6 @@ static void initial_enqueue(Queue q, void*item)
 
 static void *refresh_queue(Queue q, FILE *log)
 {
-    // read file
-    //fseek(log, 0L, SEEK_END);
-    //long numbytes = ftell(log);
-    //fseek(log, 0L, SEEK_SET);
-
-    //char *buffer = (char*)malloc(sizeof(char) * 700);
     char *buffer = (char*)calloc(700, sizeof(char));
     //buffer = NULL;
     fread(buffer, sizeof(char), 700, log);
