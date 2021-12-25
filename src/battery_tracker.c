@@ -7,14 +7,16 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
-#include "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Utilities/queue.h"
+#include <sys/stat.h>
+#include "/usr/lib/battery-tracker/Utilities/queue.h"
 
 // Location of current battery voltage file 
 #define ENERGY_NOW "/sys/class/power_supply/BAT0/energy_now"
 // Location of max battery voltage file
 #define ENERGY_FULL "/sys/class/power_supply/BAT0/energy_full"
 // Location where output is stored
-#define BAT_DATA "/var/lib/bat_data"
+#define BAT_DATA "/var/log/Battery Tracker/bat_data"
+#define BAT_LOG "/var/log/Battery Tracker/Past Days/"
 // One day in Unix
 #define UNIX_DAY 86400
 // 00:00:00
@@ -31,7 +33,7 @@ static char *new_filename(time_t curr_time)
 {
     char *location = (char*)malloc(200);
     //strcpy(location, "data/");
-    strcpy(location, "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/");
+    strcpy(location, BAT_LOG);
     char *time_string = ctime(&curr_time);
     time_string[strlen(time_string) - 1] = 0; // removes '\n' 
     for (int i = 0; i < strlen(time_string); i++)
@@ -68,11 +70,11 @@ static void copy_file_contents(FILE *source, FILE *target)
 int main(void)
 {
     //check access
-    if (access(BAT_DATA, W_OK) != 0)
+    /*if (access(BAT_DATA, W_OK) != 0)
     {
         perror("You don't have permission to write to file");
         return 1;
-    }
+    }*/
 
     // Creating file pointers
     FILE *cur_bat, *max_bat, *output;
@@ -83,6 +85,14 @@ int main(void)
 
     // Have I cleared the current file?
     int clear_file = 0;
+
+    output = fopen(BAT_DATA, "a");
+    if (!output)
+            {
+                mkdir("/var/log/Battery Tracker", S_IRWXO);
+                output = fopen("BAT_DATA", "w");
+            }
+    fclose(output);
 
     // main loop of daemon process
     while(1)
@@ -115,8 +125,24 @@ int main(void)
         {
             // Copy current data to new file and add it to the past days queue
             FILE *source = fopen(BAT_DATA,"r");
+            
+            //
+            //if (!source)
+            //{
+            //   mkdir("/var/log/Battery Tracker", S_IRWXO);
+            //    source = fopen("BAT_DATA", "w");
+            //}
+
             target_name = new_filename(cur_time);
             FILE *target = fopen(target_name,"w");
+            
+            if (!target)
+            {
+                mkdir(BAT_LOG, S_IRWXO);
+                target = fopen(target_name,"w");
+            }
+
+
             if (! target)
                 perror("Can't create file");
             printf("name: %s\n", target_name);

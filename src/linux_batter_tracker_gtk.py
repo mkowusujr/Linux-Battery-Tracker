@@ -21,16 +21,19 @@ from gi.repository import Gtk
 
 def fetch_bat_log():
     # list_of_days = []
-    with open("/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/bat_log.txt", 'r') as log:
+    with open("/var/log/Battery Tracker/bat_log.txt", 'r') as log:
         days = log.readline().strip()
         days = days.split(',')
         list_of_days = days
     log.close()
+    if list_of_days[0] == '':
+        return ''
     return list_of_days
 
 
 def queue_len():
-    return len(fetch_bat_log())
+    nnn = len(fetch_bat_log())
+    return nnn
 
 
 def open_file(file):
@@ -59,7 +62,7 @@ def get_date(index):
         return "No Data"
     try:
         if index == 7:
-            file = "/var/lib/bat_data"
+            file = "/var/log/Battery Tracker/bat_data"
         else:
             days = fetch_bat_log()
             file = days[index]
@@ -78,7 +81,7 @@ def make_fig(index):
 
     try:
         if index == 7:
-            file = "/var/lib/bat_data"
+            file = "/var/log/Battery Tracker/bat_data"
         else:
             if index < 0:
                 raise IndexError

@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "queue.h"
-#define LOG_FILE "/home/mathew/Local_GitHub_Repositories/Linux-Battery-Tracker/Created_Data/bat_log.txt"
+#define LOG_FILE "/var/log/Battery Tracker/bat_log.txt"
 
 //
 typedef struct queue_s{
@@ -85,6 +86,12 @@ Queue make_queue(int max_cap)
     if (log != NULL)
     {
         q->buffer = refresh_queue(q, log);
+    }
+    else
+    {
+        mkdir("/var/log/Battery Tracker/", S_IRWXO);
+        log = fopen(LOG_FILE, "w");
+        fclose(log);
     }
     return q;
 }
