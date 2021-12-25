@@ -3,7 +3,7 @@ Description=My Battery Stat Tracker Service
 
 [Service]
 Type=simple
-ExecStart=/home/mathew/Documents/programming/c/battery_daemon/a.out
+ExecStart=/usr/lib/battery-tracker/battery_tracker
 
 [Install]
 WantedBy=multi-user.target
