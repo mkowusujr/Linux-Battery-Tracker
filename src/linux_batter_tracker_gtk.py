@@ -21,7 +21,7 @@ from gi.repository import Gtk
 
 def fetch_bat_log():
     # list_of_days = []
-    with open("/var/log/Battery Tracker/bat_log.txt", 'r') as log:
+    with open("/var/log/battery-tracker/bat_log.txt", 'r') as log:
         days = log.readline().strip()
         days = days.split(',')
         list_of_days = days
@@ -62,7 +62,7 @@ def get_date(index):
         return "No Data"
     try:
         if index == 7:
-            file = "/var/log/Battery Tracker/bat_data"
+            file = "/var/log/battery-tracker/bat_data"
         else:
             days = fetch_bat_log()
             file = days[index]
@@ -81,7 +81,7 @@ def make_fig(index):
 
     try:
         if index == 7:
-            file = "/var/log/Battery Tracker/bat_data"
+            file = "/var/log/battery-tracker/bat_data"
         else:
             if index < 0:
                 raise IndexError

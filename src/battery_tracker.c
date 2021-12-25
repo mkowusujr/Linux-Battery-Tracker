@@ -15,8 +15,8 @@
 // Location of max battery voltage file
 #define ENERGY_FULL "/sys/class/power_supply/BAT0/energy_full"
 // Location where output is stored
-#define BAT_DATA "/var/log/Battery Tracker/bat_data"
-#define BAT_LOG "/var/log/Battery Tracker/Past Days/"
+#define BAT_DATA "/var/log/battery-tracker/bat_data"
+#define BAT_LOG "/var/log/battery-tracker/past-days/"
 // One day in Unix
 #define UNIX_DAY 86400
 // 00:00:00
@@ -89,7 +89,7 @@ int main(void)
     output = fopen(BAT_DATA, "a");
     if (!output)
             {
-                mkdir("/var/log/Battery Tracker", S_IRWXO);
+                mkdir("/var/log/battery-tracker", S_IRWXO);
                 output = fopen("BAT_DATA", "w");
             }
     fclose(output);

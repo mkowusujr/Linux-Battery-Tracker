@@ -6,7 +6,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include "queue.h"
-#define LOG_FILE "/var/log/Battery Tracker/bat_log.txt"
+#define LOG_FILE "/var/log/battery-tracker/bat_log.txt"
 
 //
 typedef struct queue_s{
