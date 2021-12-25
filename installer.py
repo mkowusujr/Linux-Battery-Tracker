@@ -27,6 +27,9 @@ def main():
 	os.system("systemctl enable battery.service")
 	os.system("systemctl start battery.service")
 
-if __name__ == '__main__':
-    main()
+	# create desktop file
+	os.system("sudo cp src/battery-tracker.desktop /usr/share/applications")
 
+
+if __name__ == '__main__':
+	main()

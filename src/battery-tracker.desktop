@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Linux Battery Tracker
+Path=/usr/lib/battery-tracker/src/
+Exec=/usr/lib/battery-tracker/src/battery_tracker_gtk.py
+Icon=/usr/lib/battery-tracker/src/icons8-battery-128.png
+Terminal=false
