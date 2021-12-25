@@ -5,7 +5,7 @@ def main():
 	# make the needed directories
 	print("Creating needed directories...")
 	os.system("sudo mkdir /var/log/battery-tracker")
-	os.system("sudo mkdir /var/log/battery-tracker/Past Days")
+	os.system("sudo mkdir /var/log/battery-tracker/past-days")
 	os.system("sudo mkdir /usr/lib/battery-tracker")
 	os.system("sudo mkdir /usr/lib/battery-tracker/src")
 	os.system("sudo mkdir /usr/lib/battery-tracker/Utilities")
@@ -19,7 +19,7 @@ def main():
 
 	# compile the program
 	print("Compiling Program files")
-	os.system("sudo gcc src/battery_tracker.c Utilities/file_queue.c -o battery_tracker")
+	os.system("sudo gcc /usr/lib/battery-tracker/src/battery_tracker.c /usr/lib/battery-tracker/Utilities/file_queue.c -o /usr/lib/battery-tracker/battery_tracker")
 
 	# create systemctl service file and enable it
 	print("Starting the background process")
