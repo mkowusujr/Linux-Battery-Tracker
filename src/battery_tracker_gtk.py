@@ -39,6 +39,7 @@ def queue_len():
 def open_file(file):
     times = []
     battery = []
+    status = []
     # Open file
     with open(file, 'r') as data:
         for line in data.readlines():
@@ -53,8 +54,9 @@ def open_file(file):
 
             # store battery data
             battery.append(float(line[1]))
+            status.append(int(line[2]))
     data.close()
-    return times, battery
+    return times, battery, status
 
 
 def get_date(index):
@@ -88,15 +90,47 @@ def make_fig(index):
             days = fetch_bat_log()
             file = days[index]
 
-        times, battery = open_file(file)
-
+        times, battery, status = open_file(file)
+        # charge
+        # charging_x = []
+        # charging_y = []
+        # # discharge
+        # discharging_x = []
+        # discharging_y = []
+        # for i in range(0, len(status)):
+        #     if status[i] == 1:
+        #         # if i > 0 and status[i-1] == 0:
+        #         #     charging_x.append(np.nan)
+        #         #     charging_y.append(np.nan)
+        #         charging_x.append(times[i])
+        #         charging_y.append(battery[i])
+        #
+        #     else:
+        #         # if i > 0 and status[i-1] == 1:
+        #             # discharging_x.append(np.nan)
+        #             # discharging_y.append(np.nan)
+        #         discharging_x.append(times[i])
+        #         discharging_y.append(battery[i])
+        # print(discharging_x)
         # store data in coordinates
         x_vals = np.array(times)
+        # charging_x_vals = np.array(charging_x)
+        # charging_y_vals = np.array(charging_y)
+        # discharging_x_vals = np.array(discharging_x)
+        # discharging_y_vals = np.array(discharging_y)
         y_vals = np.array(battery)
-
+        # ax.plot(x_vals, y_vals)
         # plot the coordinates
+        # if len(charging_x_vals) != 0:
+        #     # for i in range(0, len(discharging_x_vals)):
+        #     #     for j in range(0, len(charging_x_vals)):
+        #     #         if charging_x_vals[j] == discharging_x_vals[i]:
+        #     #             charging_x_vals[j] = np.nan
+        #     ax.plot(charging_x_vals, charging_y_vals, 'g')
+        #     # ax = ax.resample('H').first().fillna(value=np.nan)
+        # if len(discharging_x_vals) != 0:
+        #     ax.plot(discharging_x_vals, discharging_y_vals, 'r')
         ax.plot(x_vals, y_vals)
-
         year = int(times[0].date().strftime("%Y"))
         month = int(times[0].date().strftime("%m"))
         day = int(times[0].date().strftime("%d"))
@@ -136,10 +170,10 @@ class LBTGui:
         self.builder.get_object("chart_name").set_text(date_str)
         self.plot_data(7)
 
-    def plot_data(self, file):
+    def plot_data(self, index):
         canvas_window = self.builder.get_object("main_win_display")
         # graph data
-        fig = make_fig(file)
+        fig = make_fig(index)
         # add to canvas and window
         canvas = FigureCanvas(fig)
         canvas.set_size_request(900, 500)

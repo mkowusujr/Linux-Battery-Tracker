@@ -17,6 +17,7 @@
 // Location where output is stored
 #define BAT_DATA "/var/log/battery-tracker/bat_data"
 #define BAT_LOG "/var/log/battery-tracker/past-days/"
+#define CHARGE_STATUS "/sys/class/power_supply/BAT0/status"
 // One day in Unix
 #define UNIX_DAY 86400
 // 00:00:00
@@ -77,7 +78,7 @@ int main(void)
     }*/
 
     // Creating file pointers
-    FILE *cur_bat, *max_bat, *output;
+    FILE *cur_bat, *max_bat, *output, *charging;
     
     // queue for handling past bat day data
     Queue past_days = make_queue(7);
@@ -114,6 +115,14 @@ int main(void)
         bat_percentage *= 100.0;
         printf("current battery percentage %0.2f%%\n", bat_percentage);
         
+        // get charge status
+        charging = fopen(CHARGE_STATUS, "r");
+        int status;
+        if (fgetc(charging) == 'D')
+            status = 0;
+        else
+            status = 1;
+
         // Get the current unix time
         time_t cur_time = time(0);
         
@@ -151,13 +160,13 @@ int main(void)
 
             // Wipe current file
             output = fopen(BAT_DATA, "w");
-            fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
+            fprintf(output, "%lu,%0.2f,%d\n", cur_time, bat_percentage, status);
             clear_file = 1;
         }
         else
         {
             output = fopen(BAT_DATA, "a");
-            fprintf(output, "%lu,%0.2f\n", cur_time, bat_percentage);
+            fprintf(output, "%lu,%0.2f,%d\n", cur_time, bat_percentage, status);
         }
 
         if (cur_time % UNIX_DAY > TWELVE_O_ONE)
@@ -166,6 +175,7 @@ int main(void)
         // Closing files, freeing memory
         fclose(cur_bat);
         fclose(max_bat);
+        fclose(charging);
         fclose(output);
         //sleep
         sleep(10);
