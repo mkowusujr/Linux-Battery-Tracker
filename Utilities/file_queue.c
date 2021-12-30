@@ -1,6 +1,7 @@
-// file: queue
-// description: a queue of length 5
-// author: mathew owusu jr
+/// file: file_queue.c
+/// description: an implementation of the queue header file that has special
+/// functions to handle the functionality of the battery tracking program
+/// author: mathew owusu jr
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,18 +9,22 @@
 #include "queue.h"
 #define LOG_FILE "/var/log/battery-tracker/bat_log.txt"
 
-//
+/// A queue struct
+/// @param int curr_capacity is the current capacity of the queue
+/// @param int max_capacity is the max amount of elements the queue can hold
+/// @param void **list a list that simulates the queue
+/// @param *buffer needed to track the file pointer to the battery log
+/// @returns a pointer to queue struct
 typedef struct queue_s{
     int curr_capacity;
     int max_capacity;
-    void** list;
+    void **list;
     void *buffer;
 }* Queue;
 
 
-//
-//
-// @param:
+/// Opens the battery log file to reflect the filesnames currently in the queue
+/// @param Queue q is a pointer to a queue struct
 static void update_bat_stat_log(Queue q)
 {
     FILE *bat_log = fopen(LOG_FILE, "w");
@@ -28,29 +33,31 @@ static void update_bat_stat_log(Queue q)
         if (i != (qlength(q) - 1))
         {
             fprintf(bat_log, "%s,", (char*)(q->list[i]));
-            //fprintf(bat_log, ",");    
         }
         else
         {
             fprintf(bat_log, "%s\n", (char*)(q->list[i]));
-            //fprintf(bat_log, "\n");
         }
     }
     fclose(bat_log);
 }
 
-
+/// Adds the first element into the queue, used to sync the queue with battery
+/// log in cases where the program is restarted
+/// @param Queue q is a pointer to a queue struct
+/// @param void *item is an element that has no type
 static void initial_enqueue(Queue q, void*item)
 {
-    q->list[q->curr_capacity] = item;    
+    q->list[q->curr_capacity] = item;
     q->curr_capacity += 1;
 }
 
-
+/// Syncs the queue with the contents of the battery log
+/// @param Queue q is a pointer to a queue struct
+/// @param FILE *log a pointer to the battery log file
 static void *refresh_queue(Queue q, FILE *log)
 {
     char *buffer = (char*)calloc(700, sizeof(char));
-    //buffer = NULL;
     fread(buffer, sizeof(char), 700, log);
     printf("%s\n", buffer);
     char *token = strtok(buffer, ",");
@@ -60,16 +67,14 @@ static void *refresh_queue(Queue q, FILE *log)
         initial_enqueue(q, (void*)token);
         token = strtok(NULL, ",");
     }
-//    free(buffer);
     fclose(log);
     return (void *)buffer;
 }
 
 
-//
-//
-// @param:
-// @return:
+/// Creates the queue and returns a pointer to it
+/// @param int max_cap is the max amount of elements the queue can hold
+/// @return a pointer to the created queue struct
 Queue make_queue(int max_cap)
 {
     Queue q = malloc(sizeof(struct queue_s));
@@ -91,9 +96,9 @@ Queue make_queue(int max_cap)
 }
 
 
-//
-// 
-// @param:
+/// Frees the memory inside the queue struct, and frees the memeory allocated to
+/// the queue struct
+/// @param Queue q is a pointer to a queue struct
 void destory_queue(Queue q)
 {
     free(q->list);
@@ -102,24 +107,24 @@ void destory_queue(Queue q)
 }
 
 
-// 
-//
-// @param:
+/// Adds a generic element into the queue
+/// @param Queue q is a pointer to a queue struct
+/// @param void *item is an element that has no type
 void enqueue(Queue q, void* item)
 {
     if (q->curr_capacity == q->max_capacity)
     {
         dequeue(q);
     }
-    q->list[q->curr_capacity] = item;    
+    q->list[q->curr_capacity] = item;
     q->curr_capacity += 1;
     update_bat_stat_log(q);
 }
 
 
-//
-//
-// @param:
+/// Remove the first item from the queue
+/// @param Queue q is a pointer to a queue struct
+/// @param void *item is an element that has no type
 void dequeue(Queue q)
 {
     remove((char*)qfront(q));
@@ -132,62 +137,57 @@ void dequeue(Queue q)
 }
 
 
-//
-//
-// @param:
-// @return:
-void* qfront(Queue q)
+/// Returns the element at the front of the queue
+/// @param Queue q is a pointer to a queue struct
+/// @return the first element in the queue
+void *qfront(Queue q)
 {
     return q->list[0];
 }
 
 
-//
-//
-// @param:
-// @return: 
-void* qrear(Queue q)
+/// Returns the element at the end of the queue
+/// @param Queue q is a pointer to a queue struct
+/// @return the last element in the queue
+void *qrear(Queue q)
 {
     return q->list[q->curr_capacity - 1];
 }
 
 
-//
-//
-// @param:
-// @return:
-void* qposition(Queue q, int position)
+/// Returns the element at the specified position
+/// @param Queue q is a pointer to a queue struct
+/// @param int position is the index
+/// @return the element in queue at the specified qposition
+void *qposition(Queue q, int position)
 {
     return q->list[position];
 }
 
-//
-//
-// @param:
-// @return:
-void** get_queue(Queue q)
+
+/// @param Queue q is a pointer to a queue struct
+/// @return the list inside the queue struct
+void **get_queue(Queue q)
 {
     return q->list;
 }
 
 
-//
-//
-// @param:
-// @return: 1 if empty, 0 if not empty
+/// Returns whether or no the list inside the queue struct is empty
+/// @param Queue q is a pointer to a queue struct
+/// @return 1 if true, 0 if false
 int is_q_empty(Queue q)
 {
     if(q->curr_capacity != 0)
         return 0;
-    else 
+    else
         return 1;
 }
 
 
-// 
-//
-// @param:
-// @ return 1 if full, 0 is not full
+/// Returns whether or no the list inside the queue struct is full
+/// @param Queue q is a pointer to a queue struct
+/// @return 1 if true, 0 if false
 int is_q_full(Queue q)
 {
     if (q->curr_capacity != q->max_capacity)
@@ -197,11 +197,9 @@ int is_q_full(Queue q)
 }
 
 
-//
-//
-// @param:
-// @return:
+/// @param Queue q is a pointer to a queue struct
+/// @return the length of the list inside the queue struct
 int qlength(Queue q)
 {
-    return q->curr_capacity; 
+    return q->curr_capacity;
 }

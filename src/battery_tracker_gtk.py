@@ -1,8 +1,12 @@
 #!/usr/bin/env python
+"""
+file: battery_tracker_qtk.py
+description: The Gtk application that graphs and displays the data recorded by
+the battery_tracker.c daemon process
+author: mathew owusu jr
+"""
 # Load Gtk
 import gi
-
-# matplotlib
 from matplotlib.backends.backend_gtk3agg import (
     FigureCanvasGTK3Agg as FigureCanvas)
 from matplotlib.figure import Figure
@@ -10,8 +14,6 @@ import matplotlib.dates as dates
 from matplotlib.ticker import PercentFormatter
 from matplotlib.ticker import AutoMinorLocator
 import numpy as np
-
-# datetime
 import datetime
 from datetime import timedelta
 
@@ -20,7 +22,10 @@ from gi.repository import Gtk
 
 
 def fetch_bat_log():
-    # list_of_days = []
+    """
+    Opens and reads the bat_log.txt a comma seperated list of filenames
+    :return: A list of file names
+    """
     with open("/var/log/battery-tracker/bat_log.txt", 'r') as log:
         days = log.readline().strip()
         days = days.split(',')
@@ -32,11 +37,20 @@ def fetch_bat_log():
 
 
 def queue_len():
+    """
+    :return: the length of the battery log queue
+    """
     nnn = len(fetch_bat_log())
     return nnn
 
 
 def open_file(file):
+    """
+    Opens and reads the file passed through function parameters
+    :param: the name of the file
+    :return: two lists, the first one contains the times values, and the
+    second contains the battery values
+    """
     times = []
     battery = []
     # Open file
@@ -58,6 +72,9 @@ def open_file(file):
 
 
 def get_date(index):
+    """
+
+    """
     if index < 0:
         return "No Data"
     try:
