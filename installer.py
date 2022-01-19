@@ -11,6 +11,10 @@ def main():
 	os.system("sudo mkdir /usr/lib/battery-tracker/Utilities")
 	print("done...")
 	
+	# downloaded packages for gtk
+	print("Downloading python packages for gtk application")
+	os.system("pip install -r requirements.txt")
+
 	# copy over program files to those locations
 	print("Copying over program files...")
 	os.system("sudo cp src/battery_tracker.c /usr/lib/battery-tracker/src")

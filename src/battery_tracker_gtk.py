@@ -28,7 +28,7 @@ def fetch_bat_log():
     """
     with open("/var/log/battery-tracker/bat_log.txt", 'r') as log:
         days = log.readline().strip()
-        days = days.split(',')
+        days = days.split('\n,')
         list_of_days = days
     log.close()
     if list_of_days[0] == '':
